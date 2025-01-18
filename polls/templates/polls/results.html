@@ -12,18 +12,21 @@
             </div>
 
             <div class="panel-body">
-                <h3>Which language is easier to learn?</h3>
+                <h3>{{question.question_text}}</h3>
             </div>
 
             <ul class="list-group">
-                <li class="list-group-item">Python &mdash; <strong>3</strong></li>
+                {% for choice in question.choice_set.all %}
+                <li class="list-group-item">{{choice}} &mdash; <strong>{{choice.votes}}</strong></li>
+            {% endfor %}
+                <!-- <li class="list-group-item">Python &mdash; <strong>3</strong></li>
                 <li class="list-group-item">JavaScript &mdash; <strong>3</strong></li>
-                <li class="list-group-item">Swift &mdash; <strong>4</strong></li>
+                <li class="list-group-item">Swift &mdash; <strong>4</strong></li> -->
             </ul>
-
-            <div class="panel-footer">
+            <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+            <!-- <div class="panel-footer">
                 Total &mdash; <strong>10</strong>
-            </div>
+            </div> -->
 
         </div>
     </div>

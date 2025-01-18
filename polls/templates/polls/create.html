@@ -10,8 +10,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Create A New Poll</h3>
             </div>
-
             <form method="POST">
+                {% csrf_token %}
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -39,6 +39,12 @@
                             <div class="form-group">
                                 <label for="option3">Option 3</label>
                                 <input type="text" name="option3" id="option3" class="form-control" placeholder="Enter option 3" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="option4">Option 4</label>
+                                <input type="text" name="option4" id="option4" class="form-control" placeholder="Enter option 4" />
                             </div>
                         </div>
                     </div>
