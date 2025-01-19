@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.urls import path,include
 from polls import views as poll_views
 urlpatterns = [
+    # Polls
     path("polls/", include("polls.urls")),
-    path("admin/", admin.site.urls),
-        path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls), 
     path('', poll_views.index, name='home'),
-    # path('create/', poll_views.create, name='create'),
-    # path('results/', poll_views.results, name='results'),
-    # path('vote/', poll_views.vote, name='vote'),
+      
+    path('admin-login/', poll_views.CustomLoginView.as_view(), name='admin_login'),
+
 ]

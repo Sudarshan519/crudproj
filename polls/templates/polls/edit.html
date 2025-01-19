@@ -1,13 +1,13 @@
 {% extends "polls/base.html" %}
 
-{% block title %}Create a New Question{% endblock %}
+{% block title %}Update Question{% endblock %}
 
 {% block main %}
 <div class="row">
     <div class="col-lg-8 col-lg-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Create a New Question</h3>
+                <h3 class="panel-title">Update Question: {{ question.question_text }}</h3>
             </div>
             <form method="POST">
                 {% csrf_token %}
@@ -31,7 +31,7 @@
                     <div class="row">
                         <hr />
                         <div class="col-lg-4">
-                            <button type="submit" class="btn btn-info">Create Question</button>
+                            <button type="submit" class="btn btn-info">Update Question</button>
                         </div>
                     </div>
                 </div>

@@ -33,6 +33,28 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 ```
+# Update models
+```python
+# models.py
+
+from django.db import models
+import datetime
+from django.utils import timezone
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField("date published",auto_now_add=True)
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    def __str__(self):
+        return self.question_text
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+    def __str__(self):
+        return self.question.question_text + " = "+self.choice_text
+```
 ## Run Migrations
 ```python 
 python manage.py migrate
@@ -90,6 +112,8 @@ admin.site.register(Question)
 
 ## polls/views.py
 ```python
+from django.http import HttpResponse
+
 def detail(request, question_id):
     return HttpResponse("You're looking at question %s." % question_id)
 
@@ -204,3 +228,22 @@ def detail(request, question_id):
 {% endfor %}
 </ul>
 ```
+
+
+# Using Forms
+```python 
+# forms.py
+from django import forms
+from .models import Question, Choice
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question_text']
+
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        fields = ['choice_text']
+```
+
