@@ -230,6 +230,145 @@ def detail(request, question_id):
 ```
 
 
+
+# Update Detail.html page
+```html
+<!-- vote.html -->
+{% extends "polls/base.html" %}
+
+{% block title %}Vote{% endblock %}
+
+{% block main %}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ question.question_text }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <ul class="list-group"></ul>
+        {% for choice in question.choice_set.all %}
+
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+    </fieldset>
+    <br>
+    <input type="submit" class="btn btn-primary" value="Vote">
+    </form>
+
+    {% endblock %}
+```
+
+
+# Template inheritance base.html
+```html
+<!-- base.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'polls:index' %}">Poll Application</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="{% block home %}{% endblock %}"><a href="{% url 'polls:index' %}" >Home</a></li>
+                        <li class="{% block create %}{% endblock %}"><a href="{% url 'polls:create' %}">Create</a></li>
+
+                    
+                        
+            
+                    </ul>
+                    
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </nav>
+
+        <div class="container">
+            {% block main %}{% endblock %}
+        </div>
+
+    </body>
+</html>
+```
+
+
+# Update Views.py for vote
+```python
+def vote(request, question_id):
+    context = {}
+
+    try:
+        question = get_object_or_404(Question, pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    if request.method == 'POST':
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST["choice"])
+        except (KeyError, Choice.DoesNotExist):
+                # Redisplay the question voting form.
+                return render(
+                    request,
+                    "polls/detail.html",
+                    {
+                        "question": question,
+                        "error_message": "You didn't select a choice.",
+                    },
+                )
+        else:
+            selected_choice.votes = F("votes") + 1
+            selected_choice.save()
+            return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+    return render(request, 'polls/vote.html', {"question": question})
+
+```
+
+# for urls.py for vote
+ 
+```python
+    path("<int:question_id>/vote/", views.vote, name="vote"),
+    path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
+```        
+# results function
+
+```python
+def results(request,pk):
+    question = get_object_or_404(Question, pk=question_id)
+    return render('polls/results.html',{'question':queston})
+```
+
+# or
+```python
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = "polls/results.html"
+```
+
+
+# urls.py for  
+
 # Using Forms
 ```python 
 # forms.py
@@ -246,4 +385,3 @@ class ChoiceForm(forms.ModelForm):
         model = Choice
         fields = ['choice_text']
 ```
-

@@ -69,7 +69,7 @@ from django.contrib.auth import logout,login
 @login_required  # Ensure only logged-in users can access the logout functionality
 def custom_logout(request):
     logout(request)  # Log the user out
-    return redirect('polls:admin_login')  # Redirect to the login page after logout
+    return redirect('admin_login')  # Redirect to the login page after logout
 # Admin Login View (Custom login)
 def admin_login(request):
     if request.method == 'POST':
@@ -83,7 +83,7 @@ def admin_login(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'polls/admin_login.html', {'form': form})
+    return render(request, 'admin/', {'form': form})
 
 @login_required
 @user_passes_test(is_admin_user)
@@ -96,7 +96,7 @@ def delete(request,question_id):
 from .forms import QuestionForm, ChoiceForm  # Assuming you have forms for validation
 
 # View for creating a new question
-@login_required
+@login_required()
 def create_question(request):
     if request.method == 'POST':
         # Creating a new Question form
