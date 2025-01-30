@@ -30,6 +30,10 @@ def detail(request, question_id):
     return render(request, "polls/detail.html", {"question": question})
     # question = get_object_or_404(Question, pk=question_id)
     # return render(request, "polls/detail.html", {"question": question})
+
+
+
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
