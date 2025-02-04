@@ -565,4 +565,12 @@ def update_question(request, question_id):
       path('update/<int:question_id>/', views.update_question, name='update_question'),
    
 ```
-
+# delete  question
+# polls/views.py
+```
+def delete(request,question_id):
+    context = {}
+    question=get_object_or_404(Question, pk=question_id)
+    question.delete()
+    return HttpResponseRedirect(reverse("polls:index",))
+```
