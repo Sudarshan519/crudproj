@@ -16,7 +16,7 @@ urlpatterns = [
   path('create/', views.create_question, name='create'),
     path('update/<int:question_id>/', views.update_question, name='update_question'),
    
-    path("<int:question_id>/vote/", views.vote, name="vote"),
-    path("<int:question_id>/delete/", views.delete, name="delete"),
+    # path("<int:question_id>/vote/", views.vote, name="vote"),
+    # path("<int:question_id>/delete/", views.delete, name="delete"),
     #  path('edit/<int:question_id>/', views.create_or_edit_question, name='edit_question'),
 ]

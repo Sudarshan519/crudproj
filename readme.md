@@ -511,3 +511,58 @@ def create_question(request):
 </div>
 {% endblock %}
 ```
+
+# polls/urls.py
+```python 
+
+  path('create/', views.create_question, name='create'),
+```
+
+
+# update
+# View for updating an existing question
+```python
+def update_question(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+
+    if request.method == 'POST':
+        # Populate the form with the existing question data
+        question_form = QuestionForm(request.POST, instance=question)
+
+        # Handle choices (assuming 4 choices)
+        choice_forms = []
+        for i in range(1, 5):
+            choice_instance = question.choice_set.all()[i-1] if i <= len(question.choice_set.all()) else None
+            choice_form = ChoiceForm(request.POST, prefix=f'choice{i}', instance=choice_instance)
+            choice_forms.append(choice_form)
+
+        if question_form.is_valid() and all(form.is_valid() for form in choice_forms):
+            # Save the question (this will update the existing question)
+            question = question_form.save()
+
+            # Save each choice form, associating them with the updated question
+            for form in choice_forms:
+                form.save()
+
+            # Redirect to another page after updating, e.g., question list or detail page
+            return redirect('polls:question_list')
+
+    else:
+        # Handle GET request - initialize forms with existing data
+        question_form = QuestionForm(instance=question)
+        choice_forms = [ChoiceForm(prefix=f'choice{i}', instance=question.choice_set.all()[i-1] if i <= len(question.choice_set.all()) else None) for i in range(1, 5)]
+
+    return render(request, 'polls/create.html', {
+        'question_form': question_form,
+        'choice_forms': choice_forms,
+        'question': question
+    })
+```
+
+# polls/urls.py
+```python 
+
+      path('update/<int:question_id>/', views.update_question, name='update_question'),
+   
+```
+

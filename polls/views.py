@@ -102,27 +102,27 @@ from .forms import QuestionForm, ChoiceForm  # Assuming you have forms for valid
 # View for creating a new question
 # @login_required()
 def create_question(request):
-    # if request.method == 'POST':
+    if request.method == 'POST':
     #     # Creating a new Question form
-    #     question_form = QuestionForm(request.POST)
+        question_form = QuestionForm(request.POST)
 
     #     # Handle choices (assuming 4 choices)
-    #     choice_forms = []
-    #     for i in range(1, 5):
-    #         choice_form = ChoiceForm(request.POST, prefix=f'choice{i}')
-    #         choice_forms.append(choice_form)
+        choice_forms = []
+        for i in range(1, 5):
+            choice_form = ChoiceForm(request.POST, prefix=f'choice{i}')
+            choice_forms.append(choice_form)
 
-    #     if question_form.is_valid() and all(form.is_valid() for form in choice_forms):
-    #         # Save the question first (this will assign a primary key)
-    #         question = question_form.save()
+        if question_form.is_valid() and all(form.is_valid() for form in choice_forms):
+            # Save the question first (this will assign a primary key)
+            question = question_form.save()
 
-    #         # Save each choice form and associate it with the created question
-    #         for form in choice_forms:
-    #             form.instance.question = question  # Associate the choice with the saved question
-    #             form.save()
+            # Save each choice form and associate it with the created question
+            for form in choice_forms:
+                form.instance.question = question  # Associate the choice with the saved question
+                form.save()
 
-    #         # Redirect to another page after creation, e.g., question list or detail
-    #         return redirect('polls:index')
+            # Redirect to another page after creation, e.g., question list or detail
+            return redirect('polls:index')
 
     # else:
         # Initialize empty forms for GET request
@@ -166,7 +166,7 @@ def update_question(request, question_id):
         question_form = QuestionForm(instance=question)
         choice_forms = [ChoiceForm(prefix=f'choice{i}', instance=question.choice_set.all()[i-1] if i <= len(question.choice_set.all()) else None) for i in range(1, 5)]
 
-    return render(request, 'polls/update_question.html', {
+    return render(request, 'polls/create.html', {
         'question_form': question_form,
         'choice_forms': choice_forms,
         'question': question
