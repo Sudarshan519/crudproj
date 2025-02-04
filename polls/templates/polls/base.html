@@ -32,7 +32,7 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                         <li class="{% block home %}{% endblock %}"><a href="{% url 'polls:index' %}" >Home</a></li>
-                        <li class="{% block create %}{% endblock %}"><a href="">Create</a></li>
+                        <li class="{% block create %}{% endblock %}"><a href="{% url 'polls:create' %}">Create</a></li>
 
                     
                         

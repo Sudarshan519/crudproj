@@ -424,3 +424,90 @@ a.navbar-brand, .panel-title {
     font-weight: bolder;
 }
 ```
+
+# create
+```
+def create_question(request):
+    # if request.method == 'POST':
+    #     # Creating a new Question form
+    #     question_form = QuestionForm(request.POST)
+
+    #     # Handle choices (assuming 4 choices)
+    #     choice_forms = []
+    #     for i in range(1, 5):
+    #         choice_form = ChoiceForm(request.POST, prefix=f'choice{i}')
+    #         choice_forms.append(choice_form)
+
+    #     if question_form.is_valid() and all(form.is_valid() for form in choice_forms):
+    #         # Save the question first (this will assign a primary key)
+    #         question = question_form.save()
+
+    #         # Save each choice form and associate it with the created question
+    #         for form in choice_forms:
+    #             form.instance.question = question  # Associate the choice with the saved question
+    #             form.save()
+
+    #         # Redirect to another page after creation, e.g., question list or detail
+    #         return redirect('polls:index')
+
+    # else:
+        # Initialize empty forms for GET request
+    question_form = QuestionForm()
+    choice_forms = [ChoiceForm(prefix=f'choice{i}') for i in range(1, 5)]
+
+    return render(request, 'polls/create.html', {
+        'question_form': question_form,
+        'choice_forms': choice_forms
+    })
+
+```
+
+
+# create.html
+```
+{% extends "polls/base.html" %}
+
+{% block create %} active
+ {% endblock %}
+
+{% block title %}Create a New Question{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Create a New Question</h3>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="question_text">Question</label>
+                        {{ question_form.as_p }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="choices">Choices</label>
+                        <div id="choices">
+                            {% for form in choice_forms %}
+                                <div class="form-group">
+                                    {{ form.as_p }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <hr />
+                        <div class="col-lg-4">
+                            <button type="submit" class="btn btn-info">Create Question</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
